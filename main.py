@@ -58,11 +58,12 @@ async def tumor_predict_karo(
 
         contents = await file.read()
         image = Image.open(io.BytesIO(contents))
-        input_tensor = preprocess(image)
+        preprocessed_image = preprocess(image)
 
-        prediction = model.predict(input_tensor, verbose = 1)
-        result = int(np.argmax(prediction))
-        confidence = float(prediction[0][result]) * 100 
+        
+        prediction = model.predict(preprocessed_image)
+        result = prediction.argmax()
+        confidence = prediction[0][result] * 100
 
         all_predictions = {
             labels[i]: round(float(prediction[0][i]) * 100, 2)
